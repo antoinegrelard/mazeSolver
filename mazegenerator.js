@@ -21,8 +21,8 @@ function newMaze(x, y) {
     }
     
     // Set a random position to start from
-    currentCell = [0, 0];
-    exitCell = [x-1, y-1];
+    currentCell = [Math.floor(Math.random()*y), Math.floor(Math.random()*x)];
+    exitCell = [Math.floor(Math.random()*y), Math.floor(Math.random()*x)];
     playerCell = currentCell;
     path = [currentCell];
     unvis[currentCell[0]][currentCell[1]] = false;
@@ -85,6 +85,7 @@ function solve(maze) {
 
     setInterval(function() {
         if((playerCell[0] !== exitCell[0]) || (playerCell[1] !== exitCell[1])) {
+            // console.log("coucou");
 
             var potential = [
                                 [playerCell[0]-1, playerCell[1], 0, 2],
@@ -160,7 +161,7 @@ function solve(maze) {
             }
 
         }
-    }, 10);
+    }, 1);
 
 }
 
