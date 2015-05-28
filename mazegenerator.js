@@ -82,76 +82,85 @@ function solve(maze) {
 
     unvisSolve[playerCell[0]][playerCell[1]] = false;
 
-    while((playerCell[0] !== exitCell[0]) || (playerCell[1] !== exitCell[1])) {
 
-        var potential = [
-                            [playerCell[0]-1, playerCell[1], 0, 2],
-                            [playerCell[0]  , playerCell[1]+1, 1, 3],
-                            [playerCell[0]+1, playerCell[1], 2, 0],
-                            [playerCell[0]  , playerCell[1]-1, 3, 1]
-                        ];
+    setInterval(function() {
+        if((playerCell[0] !== exitCell[0]) || (playerCell[1] !== exitCell[1])) {
 
-        var neighbors = new Array();
+            var potential = [
+                                [playerCell[0]-1, playerCell[1], 0, 2],
+                                [playerCell[0]  , playerCell[1]+1, 1, 3],
+                                [playerCell[0]+1, playerCell[1], 2, 0],
+                                [playerCell[0]  , playerCell[1]-1, 3, 1]
+                            ];
 
-        // Determine if each neighboring cell is in game grid, and whether it has already been checked
-        for (var l = 0; l < 4; l++) {
-            if (potential[l][0] > -1 && potential[l][0] < myMaze.length && potential[l][1] > -1 &&  potential[l][1] < myMaze.length && unvisSolve[potential[l][0]][potential[l][1]]) {
-                neighbors.push(potential[l]);
-            }
-        }
+            var neighbors = new Array();
 
-        var neighborX;
-        var neighborY;
-        var neighborAxis;
-        var neighborCell;
-        var neighborBorderValue;
-        var neighborsToVisit= new Array();
-
-        for (var m = 0; m < neighbors.length; m++) {
-            neighborX = neighbors[m][0];
-            neighborY = neighbors[m][1];
-            neighborAxis = neighbors[m][3];
-            neighborCell = $('#' + neighborX + '-' + neighborY);
-            switch(neighborAxis){
-                case 0:
-                    neighborBorderValue = neighborCell.css("border-top-style");
-                    break;
-                case 1:
-                    neighborBorderValue = neighborCell.css("border-right-style");
-                    break;
-                case 2:
-                    neighborBorderValue = neighborCell.css("border-bottom-style");
-                    break;
-                case 3:
-                    neighborBorderValue = neighborCell.css("border-left-style");
-                    break;
+            // Determine if each neighboring cell is in game grid, and whether it has already been checked
+            for (var l = 0; l < 4; l++) {
+                if (potential[l][0] > -1 && potential[l][0] < myMaze.length && potential[l][1] > -1 &&  potential[l][1] < myMaze.length && unvisSolve[potential[l][0]][potential[l][1]]) {
+                    neighbors.push(potential[l]);
+                }
             }
 
-            if(neighborBorderValue === "none") {
-                neighborsToVisit.push(neighbors[m]);
+            var neighborX;
+            var neighborY;
+            var neighborAxis;
+            var neighborCell;
+            var neighborBorderValue;
+            var neighborsToVisit= new Array();
+
+            for (var m = 0; m < neighbors.length; m++) {
+                neighborX = neighbors[m][0];
+                neighborY = neighbors[m][1];
+                neighborAxis = neighbors[m][3];
+                neighborCell = $('#' + neighborX + '-' + neighborY);
+                switch(neighborAxis){
+                    case 0:
+                        neighborBorderValue = neighborCell.css("border-top-style");
+                        break;
+                    case 1:
+                        neighborBorderValue = neighborCell.css("border-right-style");
+                        break;
+                    case 2:
+                        neighborBorderValue = neighborCell.css("border-bottom-style");
+                        break;
+                    case 3:
+                        neighborBorderValue = neighborCell.css("border-left-style");
+                        break;
+                }
+
+                if(neighborBorderValue === "none") {
+                    neighborsToVisit.push(neighbors[m]);
+                }
+
+            };
+
+            // If at least one active neighboring cell has been found
+            if (neighborsToVisit.length) {
+                // Choose one of the neighbors at random
+                next = neighborsToVisit[Math.floor(Math.random()*neighborsToVisit.length)];
+                
+                // Mark the neighbor as visited, and set it as the current cell
+                unvisSolve[next[0]][next[1]] = false;
+                playerCell = [next[0], next[1]];
+                $('.visited.current').removeClass("current");
+                $('#' + playerCell[0] + '-' + playerCell[1]).addClass("current");
+                $('#' + pathToExit[pathToExit.length-1][0] + '-' + pathToExit[pathToExit.length-1][1]).removeClass("current").addClass("visited");
+                // $('#' + playerCell[0] + '-' + playerCell[1]).css({
+                //    background: 'greenyellow'
+                // });
+                pathToExit.push(playerCell);
+            }
+            // Otherwise go back up a step and keep going
+            else {
+                playerCell = pathToExit.pop();
+                $('#' + pathToExit[pathToExit.length-1][0] + '-' + pathToExit[pathToExit.length-1][1]).removeClass("current").addClass("visited");
+                $('.visited.current').removeClass("current");
+                $('#' + playerCell[0] + '-' + playerCell[1]).addClass("current").addClass("visited");
             }
 
-        };
-
-        // If at least one active neighboring cell has been found
-        if (neighborsToVisit.length) {
-            // Choose one of the neighbors at random
-            next = neighborsToVisit[Math.floor(Math.random()*neighborsToVisit.length)];
-            
-            // Mark the neighbor as visited, and set it as the current cell
-            unvisSolve[next[0]][next[1]] = false;
-            playerCell = [next[0], next[1]];
-            $('#' + playerCell[0] + '-' + playerCell[1]).css({
-               background: 'greenyellow'
-            });
-            pathToExit.push(playerCell);
         }
-        // Otherwise go back up a step and keep going
-        else {
-            playerCell = pathToExit.pop();
-        }
-
-    }
+    }, 10);
 
 }
 

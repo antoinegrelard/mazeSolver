@@ -13,6 +13,22 @@
     width: 20px;
     height: 20px;
 }
+
+.start {
+    background-color: green !important;
+}
+
+.finish {
+    background-color: red !important;
+}
+
+.current {
+    background-color: blue !important;
+}
+
+.visited {
+    background-color: lightblue;
+}
 </style>
 </head>
 <body>
@@ -20,6 +36,8 @@
 <table id="maze">
 <tbody></tbody>
 </table>
+
+<button onclick="solve(disp)">solve</button>
 
 <script>
     var disp = newMaze(20,20);
@@ -42,15 +60,9 @@
     //     });
     // }
 
-    $('#' + playerCell[0] + '-' + playerCell[1]).css({
-       background: 'green'
-    });
+    $('#' + playerCell[0] + '-' + playerCell[1]).addClass("start");
 
-    $('#' + exitCell[0] + '-' + exitCell[1]).css({
-       background: 'red'
-    });
-
-    solve(disp);
+    $('#' + exitCell[0] + '-' + exitCell[1]).addClass("finish");
 
 </script>
 
