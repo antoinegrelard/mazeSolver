@@ -36,10 +36,6 @@
         $('#maze > tbody').append("</tr>");
     }
 
-    $('#' + exitCell[0] + '-' + exitCell[1]).css({
-       background: 'red'
-    });
-
     // for(i=0;i<path.length;i++) {
     //     $('#' + path[i][0] + '-' + path[i][1]).css({
     //        background: 'yellow'
@@ -48,6 +44,10 @@
 
     $('#' + playerCell[0] + '-' + playerCell[1]).css({
        background: 'green'
+    });
+
+    $('#' + exitCell[0] + '-' + exitCell[1]).css({
+       background: 'red'
     });
 
     solve(disp);

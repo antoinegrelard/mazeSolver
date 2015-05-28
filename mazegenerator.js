@@ -82,7 +82,7 @@ function solve(maze) {
 
     unvisSolve[playerCell[0]][playerCell[1]] = false;
 
-    while(playerCell != exitCell) {
+    while((playerCell[0] !== exitCell[0]) || (playerCell[1] !== exitCell[1])) {
 
         var potential = [
                             [playerCell[0]-1, playerCell[1], 0, 2],
@@ -95,7 +95,7 @@ function solve(maze) {
 
         // Determine if each neighboring cell is in game grid, and whether it has already been checked
         for (var l = 0; l < 4; l++) {
-            if (potential[l][0] > -1 && potential[l][0] < (myMaze.length - 1) && potential[l][1] > -1 &&  potential[l][1] < (myMaze.length - 1) && unvisSolve[potential[l][0]][potential[l][1]]) {
+            if (potential[l][0] > -1 && potential[l][0] < myMaze.length && potential[l][1] > -1 &&  potential[l][1] < myMaze.length && unvisSolve[potential[l][0]][potential[l][1]]) {
                 neighbors.push(potential[l]);
             }
         }
@@ -105,6 +105,7 @@ function solve(maze) {
         var neighborAxis;
         var neighborCell;
         var neighborBorderValue;
+        var neighborsToVisit= new Array();
 
         for (var m = 0; m < neighbors.length; m++) {
             neighborX = neighbors[m][0];
@@ -121,27 +122,24 @@ function solve(maze) {
                 case 2:
                     neighborBorderValue = neighborCell.css("border-bottom-style");
                     break;
-                default:
+                case 3:
                     neighborBorderValue = neighborCell.css("border-left-style");
                     break;
             }
 
-            if(neighborBorderValue === "solid") {
-                neighbors.splice(m,1);
+            if(neighborBorderValue === "none") {
+                neighborsToVisit.push(neighbors[m]);
             }
 
         };
 
-        return;
-
         // If at least one active neighboring cell has been found
-        if (neighbors.length) {
+        if (neighborsToVisit.length) {
             // Choose one of the neighbors at random
-            next = neighbors[Math.floor(Math.random()*neighbors.length)];
+            next = neighborsToVisit[Math.floor(Math.random()*neighborsToVisit.length)];
             
             // Mark the neighbor as visited, and set it as the current cell
             unvisSolve[next[0]][next[1]] = false;
-            visited++;
             playerCell = [next[0], next[1]];
             $('#' + playerCell[0] + '-' + playerCell[1]).css({
                background: 'greenyellow'
